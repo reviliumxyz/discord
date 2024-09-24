@@ -17,7 +17,7 @@ export default async function DiscordRequest(options: {
     const body = await request.json();
     if (body?.retry_after) {
         console.log("[Warning] Rate-limited on command init, retrying in", body?.retry_after, "seconds.");
-        setTimeout((body?.retry_after + 1.5) * 1000);
+        await setTimeout((body?.retry_after + 1.5) * 1000);
         return DiscordRequest(options);
     }
 

@@ -1,6 +1,8 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { CommandTypes, ContextTypes, IntegrationTypes } from "../lib/types/DiscordTypes";
 import type { Request, Response } from "express";
+import { getUser, searchUser } from "../lib/Revilium";
+import { whois } from "../lib/Embed";
 
 export const name = "Lookup user";
 export const type = InteractionType.APPLICATION_COMMAND;
@@ -14,15 +16,28 @@ export const metadata = {
 };
 
 export const run = async (request: Request, response: Response) => {
+    const { data } = request.body;
+    const target_id = data.target_id;
+
+    const search = await searchUser({ discord: target_id });
+    if (!search || search.length === 0)
+        return response.send({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                embeds: [
+                    {
+                        color: parseInt("ED4245", 16),
+                        description: "User not found.",
+                    },
+                ],
+            },
+        });
+
+    const user = await getUser(search[0].id);
     return response.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-            embeds: [
-                {
-                    color: parseInt("ED4245", 16),
-                    description: "User not found.",
-                },
-            ],
+            embeds: whois(user),
         },
     });
 };
