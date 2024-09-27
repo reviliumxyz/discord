@@ -1,3 +1,5 @@
+import { ERROR_COLOR, SUCCESS_COLOR } from "./Config";
+
 function dateToTimestamp(date: Date) {
     return `<t:${Math.floor(date.getTime() / 1000)}:f>`;
 }
@@ -18,7 +20,7 @@ export function whois(data: {
         {
             title: data.username,
             description: data.description,
-            color: parseInt("7f58d3", 16),
+            color: SUCCESS_COLOR,
             url: "https://revilium.dev.madhouselabs.net/users/" + data.id + "/profile",
             fields: [
                 { name: "Joined", value: dateToTimestamp(new Date(data.joinDate)), inline: true },
@@ -30,6 +32,42 @@ export function whois(data: {
             footer: {
                 text: "💵 " + data.currency,
             },
+        },
+    ];
+}
+
+export function userNotFound() {
+    return [
+        {
+            color: ERROR_COLOR,
+            description: "User not found.",
+        },
+    ];
+}
+
+export function notEntitled() {
+    return [
+        {
+            color: ERROR_COLOR,
+            description: "You are not entitled to a Revilium account.",
+        },
+    ];
+}
+
+export function alreadyClaimed() {
+    return [
+        {
+            color: ERROR_COLOR,
+            description: "You already have a Revilium account.",
+        },
+    ];
+}
+
+export function claimSuccess(invinte: string) {
+    return [
+        {
+            color: SUCCESS_COLOR,
+            description: `Your invite key is \`${invinte}\`!\nRegister on https://revilium.dev.madhouselabs.net/`,
         },
     ];
 }
