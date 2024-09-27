@@ -9,8 +9,8 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY /usr/src/app/index.ts .
-COPY /usr/src/app/package.json .
+COPY ./src .
+COPY ./package.json .
 
 USER bun
 EXPOSE 3000/tcp
